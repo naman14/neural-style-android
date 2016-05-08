@@ -104,27 +104,27 @@ cmake $1 -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_TOOLCHAIN_FILE="$SCRIPT_ROOT_DIR/cm
     -DANDROID_NATIVE_API_LEVEL=21 -DANDROID_STL=gnustl_shared\
     -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" -DCMAKE_INSTALL_SUBDIR="${CMAKE_INSTALL_SUBDIR}" \
     -DLIBRARY_OUTPUT_PATH_ROOT="${INSTALL_DIR}" \
-    -DLUAJIT_SYSTEM_MINILUA="$SCRIPT_ROOT_DIR/distro/exe/luajit-rocks/luajit-2.1/src/host/minilua" \
-    -DLUAJIT_SYSTEM_BUILDVM="$SCRIPT_ROOT_DIR/distro/exe/luajit-rocks/luajit-2.1/src/host/buildvm" \
+    -DLUAJIT_SYSTEM_MINILUA="$SCRIPT_ROOT_DIR/modules/exe/luajit-rocks/luajit-2.1/src/host/minilua" \
+    -DLUAJIT_SYSTEM_BUILDVM="$SCRIPT_ROOT_DIR/modules/exe/luajit-rocks/luajit-2.1/src/host/buildvm" \
     -DCMAKE_C_FLAGS="-DDISABLE_POSIX_MEMALIGN"
 echo " -------------- Configuring DONE ---------------"
 }
 
-cd $SCRIPT_ROOT_DIR
+# cd $SCRIPT_ROOT_DIR
 
-cd distro/extra/FindCUDA && \
-    (cmake -E make_directory build && cd build && do_cmake_config .. && make install) \
-    && echo "FindCuda installed" || exit 1
+# cd distro/extra/FindCUDA && \
+#     (cmake -E make_directory build && cd build && do_cmake_config .. && make install) \
+#     && echo "FindCuda installed" || exit 1
 
-cd $SCRIPT_ROOT_DIR
-
-cd external && \
-    (cmake -E make_directory build && cd build && do_cmake_config .. && make install) \
-    && echo "externals installed" || exit 1
+# cd $SCRIPT_ROOT_DIR
+#
+# cd external && \
+#     (cmake -E make_directory build && cd build && do_cmake_config .. && make install) \
+#     && echo "externals installed" || exit 1
 
 cd $SCRIPT_ROOT_DIR
 # Build host luajit for minilua and buildvm
-cd distro/exe/luajit-rocks/luajit-2.1
+cd modules/exe/luajit-rocks/luajit-2.1
 
 # make clean
 $MAKE $MAKEARGS HOST_CC="$HOST_CC" CC="gcc" HOST_SYS=$unamestr TARGET_SYS=Linux CROSS=$NDKP TARGET_FLAGS="$NDKF $NDKARCH"
@@ -136,17 +136,17 @@ cd $SCRIPT_ROOT_DIR
 
 cd build
 
-(cd distro/exe && $MAKE $MAKEARGS install) || exit 1
+(cd modules/extra && $MAKE $MAKEARGS install) || exit 1
 # cwrap needs to be there first
-(cd distro/pkg/cwrap && $MAKE $MAKEARGS install) || exit 1
-(cd distro/pkg && $MAKE $MAKEARGS install) || exit 1
+(cd modules/pkg/cwrap && $MAKE $MAKEARGS install) || exit 1
+(cd modules/pkg && $MAKE $MAKEARGS install) || exit 1
 
 # Cutorch installs some headers/libs used by other modules in extra
-if [[ "$WITH_CUDA" == "ON" ]]; then
-    (cd distro/extra/cutorch && $MAKE $MAKEARGS install) || exit 1
-fi
+# if [[ "$WITH_CUDA" == "ON" ]]; then
+#     (cd distro/extra/cutorch && $MAKE $MAKEARGS install) || exit 1
+# fi
 
-(cd distro/extra && $MAKE  $MAKEARGS install) || exit 1
+(cd modules/extra && $MAKE  $MAKEARGS install) || exit 1
 (cd src && $MAKE $MAKEARGS install) || exit 1
 
 cd ..
