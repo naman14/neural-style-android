@@ -2,8 +2,12 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
 CMAKE_POLICY(VERSION 2.6)
 
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
-SET(PROTOBUF_LIBRARY "/usr/local/Cellar/protobuf/2.6.1/lib/libprotobuf.a")
-SET(PROTOBUF_INCLUDE_DIR "/usr/local/Cellar/protobuf/2.6.1/include")
+
+SET(PROTOBUF_INCLUDE_DIR "/usr/local/include")
+SET(PROTOBUF_PROTOC_EXECUTABLE "/usr/local/bin/protoc")
+
+###Prebuilt protobuf static library using custom android ndk toolchain
+SET(PROTOBUF_LIBRARY "${CMAKE_SOURCE_DIR}/modules/extra/protobuf/lib/libprotobuf.a")
 
 FIND_PACKAGE(Torch REQUIRED)
 FIND_PACKAGE(Protobuf REQUIRED)

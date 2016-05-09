@@ -142,9 +142,9 @@ cd build
 (cd modules/pkg && $MAKE $MAKEARGS install) || exit 1
 
 # Cutorch installs some headers/libs used by other modules in extra
-# if [[ "$WITH_CUDA" == "ON" ]]; then
-#     (cd distro/extra/cutorch && $MAKE $MAKEARGS install) || exit 1
-# fi
+if [[ "$WITH_CUDA" == "ON" ]]; then
+    (cd modules/extra/cutorch && $MAKE $MAKEARGS install) || exit 1
+fi
 
 (cd modules/extra && $MAKE  $MAKEARGS install) || exit 1
 (cd src && $MAKE $MAKEARGS install) || exit 1
