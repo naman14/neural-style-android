@@ -1,7 +1,3 @@
-/*
- * Copyright (C) 2013 Soumith Chintala
- *
- */
 #include <jni.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,13 +7,13 @@
 extern "C" {
 
   JNIEXPORT jstring JNICALL
-  Java_com_torch_Torch_jni_1call( JNIEnv* env,
+  Java_com_naman14_arcade_library_Torch_jni_1call( JNIEnv* env,
                                  jobject thiz,
                                  jobject assetManager,
                                  jstring nativeLibraryDir_,
                                  jstring luaFile_
                                  ) {
-    //    D("Hello from C");
+       D("Hello from C");
     // get native asset manager
     AAssetManager* manager = AAssetManager_fromJava(env, assetManager);
     assert( NULL != manager);
@@ -50,8 +46,17 @@ extern "C" {
       strlcat(buffer,
               "Torch script ran succesfully. Check Logcat for more details.",
               sizeof(buffer));
+
+lua_newtable(L);
+lua_pushstring(L,"lol");
+lua_setfield(L,-2,"style_image");
+
+lua_getglobal(L, "stylize");
+lua_insert (L, -2);   // swap table and function into correct order for pcall
+int result = lua_pcall(L, 1, 0, 0);
+
     // destroy the Lua State
-    lua_close(L);
+    // lua_close(L);
     return env->NewStringUTF(buffer);
   }
 }
